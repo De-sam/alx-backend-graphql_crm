@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Customer(models.Model):
     name = models.CharField(max_length=100)
@@ -21,15 +22,15 @@ class Product(models.Model):
 class Order(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name="orders")
     products = models.ManyToManyField(Product, related_name="orders")
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    order_date = models.DateTimeField(auto_now_add=True)
+    order_date = models.DateTimeField(default=timezone.now)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def calculate_total(self):
+        total = sum(product.price for product in self.products.all())
+        self.total_amount = total
+        return total
 
     def save(self, *args, **kwargs):
-        # Ensure total_amount is calculated from product prices
-        if self.pk:  # Only after the object exists
-            total = sum([product.price for product in self.products.all()])
-            self.total_amount = total
         super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"Order {self.id} - {self.customer.name}"
+        self.calculate_total()
+        super().save(update_fields=["total_amount"])

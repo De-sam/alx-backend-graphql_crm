@@ -53,7 +53,7 @@ MIDDLEWARE = [
 ]
 
 GRAPHENE = {
-    "SCHEMA": "alx_backend_graphql.schema.schema"  # points to schema.py
+    "SCHEMA": "crm.schema.schema"  # points to schema.py
 }
 
 
