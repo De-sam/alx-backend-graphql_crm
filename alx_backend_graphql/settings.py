@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'graphene_django',   # ✅ correct (with underscore, not dash!)
+    'django_filters',    # ✅ needed for Task 3
+    'crm',
 ]
 
 MIDDLEWARE = [
@@ -48,6 +51,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+GRAPHENE = {
+    "SCHEMA": "alx_backend_graphql.schema.schema"  # points to schema.py
+}
+
 
 ROOT_URLCONF = 'alx_backend_graphql.urls'
 
